@@ -10,11 +10,13 @@ function App() {
     localStorage.getItem('noteDirectory') || ''
   );
   const [notes, setNotes] = useState<Note[]>([]);
-  useEffect(() => {
+  function fetchNotes() {
     window.electron.notes.getNotes((notes: Note[]) => {
       setNotes(notes);
     });
-    console.log('this effect ran');
+  }
+  useEffect(() => {
+    fetchNotes();
   }, []);
 
   const handleChooseDirectory = async () => {
@@ -45,53 +47,62 @@ function App() {
       },
       selectedDirectory,
       (notes: any) => {
-        console.log(notes);
+        if (notes) fetchNotes();
       }
     );
   };
 
   const handleDelete = (id: string) => {
-    window.electron.notes.deleteNote(id, (notes: any) => {
-      console.log(notes);
+    window.electron.notes.deleteNote(id, (id: any) => {
+      if (id) fetchNotes();
     });
   };
 
   const { setTheme, theme } = useTheme();
 
   return (
-    <main>
+    <main className='p-4'>
       <Button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
         Toggle Theme
       </Button>
-      {theme}
-      <h1 className='text-white font-bold'>Notes</h1>
-      {notes.map((note) => (
-        <div className='' key={note.id}>
-          <h1 className='font-bold'>{note.title}</h1>
-          <p>{note.content}</p>
-          <div className='flex justify-between'>
-            <p>{dayjs(note.createdAt).fromNow()}</p>
-            <Button onClick={() => handleDelete(note.id)}>Delete</Button>
+
+      <h1 className='font-bold'>Notes</h1>
+      <div className='bg-muted p-8 my-8 flex flex-col gap-2 rounded-xl'>
+        {notes.map((note) => (
+          <div className='border-b pb-4 my-8' key={note.id}>
+            <h1 className='font-bold'>{note.title}</h1>
+            <p>{note.content}</p>
+            <div className='flex justify-between'>
+              <small className='text-neutral-500'>
+                {dayjs(note.createdAt).fromNow()}
+              </small>
+              <Button
+                variant='destructive'
+                onClick={() => handleDelete(note.id)}
+              >
+                Delete
+              </Button>
+            </div>
           </div>
-        </div>
-      ))}
-      <div className='bg-muted flex flex-col p-4 gap-2 max-w-2xl mx-auto'>
+        ))}
+      </div>
+      <div className='bg-muted flex flex-col p-4 gap-2 max-w-2xl mx-auto border rounded-xl'>
         <Button onClick={handleChooseDirectory}>Choose Directory</Button>
         <p>{selectedDirectory}</p>
       </div>
       <form
-        className='bg-accent flex flex-col p-4 gap-2 max-w-2xl mx-auto'
+        className='bg-card flex flex-col p-4 gap-2 max-w-2xl mx-auto border rounded-xl mt-8'
         onSubmit={handleSubmit}
       >
         <input
           type='text'
           name='title'
-          className='bg-muted px-2 py-2 rounded-lg ring-1 ring-neutral-200 w-full block'
+          className='bg-muted px-2 py-2 rounded-lg border w-full block'
           placeholder='Title'
         />
         <textarea
           name='content'
-          className='bg-muted px-2 py-2 rounded-lg ring-1 ring-neutral-200 w-full block'
+          className='bg-muted px-2 py-2 rounded-lg border w-full block'
           placeholder='Content'
           id=''
           cols={30}
