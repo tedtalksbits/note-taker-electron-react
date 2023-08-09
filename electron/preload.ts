@@ -35,17 +35,17 @@ const electronHandler = {
     },
   },
   notes: {
-    getNotes(func: (notes: Note[]) => void) {
+    getNotes(func: (notes: Note[] | Error) => void) {
       ipcRenderer.send('get-notes');
       ipcRenderer.once('get-notes-response', (_event, notes) => func(notes));
     },
     addNote(
       note: NoteDTO,
       directory: string,
-      func: (...args: unknown[]) => void
+      func: (res: Note | Error) => void
     ) {
       ipcRenderer.send('add-note', note, directory);
-      ipcRenderer.once('add-note-response', (_event, ...args) => func(...args));
+      ipcRenderer.once('add-note-response', (_event, note: Note) => func(note));
     },
     updateNote(
       id: string,
@@ -57,10 +57,10 @@ const electronHandler = {
         func(...args)
       );
     },
-    deleteNote(id: string, func: (...args: unknown[]) => void) {
+    deleteNote(id: string, func: (id: string | Error) => void) {
       ipcRenderer.send('delete-note', id);
-      ipcRenderer.once('delete-note-response', (_event, ...args) =>
-        func(...args)
+      ipcRenderer.once('delete-note-response', (_event, id: string) =>
+        func(id)
       );
     },
   },

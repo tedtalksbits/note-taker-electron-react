@@ -3,21 +3,33 @@ import { Button } from '@/components/ui/button';
 import { Note } from 'electron/types/note';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { ThemeProvider, useTheme } from './providers/theme-provider';
+import { useTheme } from './providers/theme-provider';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from './features/redux/hooks/useRedux';
+import { setNotes } from './features/redux/slices/notes-slice';
+import { addNote, deleteNote, getNotes } from './features/Note/api';
 dayjs.extend(relativeTime);
 function App() {
+  const dispatch = useAppDispatch();
+  const notes = useAppSelector((state) => state.notes.notes);
+
   const [selectedDirectory, setSelectedDirectory] = useState<string>(
     localStorage.getItem('noteDirectory') || ''
   );
-  const [notes, setNotes] = useState<Note[]>([]);
-  function fetchNotes() {
-    window.electron.notes.getNotes((notes: Note[]) => {
-      setNotes(notes);
+
+  const onNotesMutation = () => {
+    getNotes((notes: Note[]) => {
+      dispatch(setNotes(notes));
     });
-  }
+  };
+
   useEffect(() => {
-    fetchNotes();
-  }, []);
+    getNotes((notes: Note[]) => {
+      dispatch(setNotes(notes));
+    });
+  }, [dispatch]);
 
   const handleChooseDirectory = async () => {
     try {
@@ -38,23 +50,22 @@ function App() {
     const formData = new FormData(e.currentTarget);
     const title = formData.get('title') as string;
     const content = formData.get('content') as string;
-    window.electron.notes.addNote(
-      {
-        title,
-        content,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-      selectedDirectory,
-      (notes: any) => {
-        if (notes) fetchNotes();
-      }
-    );
+
+    const newNote = {
+      title,
+      content,
+    };
+
+    addNote(newNote, selectedDirectory, (newNote) => {
+      console.log(newNote);
+      onNotesMutation();
+    });
   };
 
   const handleDelete = (id: string) => {
-    window.electron.notes.deleteNote(id, (id: any) => {
-      if (id) fetchNotes();
+    deleteNote(id, (res) => {
+      console.log(res);
+      onNotesMutation();
     });
   };
 

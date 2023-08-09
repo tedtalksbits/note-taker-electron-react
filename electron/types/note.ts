@@ -6,4 +6,4 @@ export type Note = {
   updatedAt: string;
 };
 
-export type NoteDTO = Omit<Note, 'id'>;
+export type NoteDTO = Omit<Note, 'id' | 'createdAt' | 'updatedAt'>;
