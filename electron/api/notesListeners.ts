@@ -6,7 +6,7 @@ import path from 'path';
 import fs from 'fs/promises';
 
 const store = new Store();
-const notesDirectory = path.join(app.getPath('userData'), 'notes');
+// const notesDirectory = path.join(app.getPath('userData'), 'notes');
 export const setUpNotesListeners = () => {
   ipcMain.on('get-notes', async (event) => {
     try {
@@ -17,6 +17,7 @@ export const setUpNotesListeners = () => {
           return JSON.parse(noteContent) as Note;
         })
       );
+
       event.reply('get-notes-response', notes);
     } catch (error) {
       console.log(error);
@@ -45,17 +46,24 @@ export const setUpNotesListeners = () => {
 
   ipcMain.on('update-note', async (event, id, update) => {
     try {
+      console.log('******** update-note ***********');
+      console.log('update-note', id, update);
       const notesPaths = store.get('notesPaths', []) as string[];
+      console.log('notePaths', notesPaths);
       const notePath = notesPaths.find((notePath) =>
         notePath.includes(id)
       ) as string;
+      console.log('notePath', notePath);
       const noteContent = await fs.readFile(notePath, 'utf-8');
+      console.log('noteContent', noteContent);
       const note = JSON.parse(noteContent) as Note;
+      console.log('note', note);
       const updatedNote = {
         ...note,
         ...update,
         updatedAt: new Date().toISOString(),
       };
+      console.log('updatedNote', updatedNote);
       await fs.writeFile(notePath, JSON.stringify(updatedNote));
       event.reply('update-note-response', updatedNote);
     } catch (error) {

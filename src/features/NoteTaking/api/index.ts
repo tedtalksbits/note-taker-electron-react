@@ -39,3 +39,33 @@ export const deleteNote = (id: string, func: (id: string) => void) => {
     func(res as string);
   });
 };
+
+export const updateNote = (
+  id: string,
+  update: NoteDTO,
+  func: (res: Note) => void
+) => {
+  console.log('updateNote');
+  window.electron.notes.updateNote(id, update, (res) => {
+    if (res instanceof Error) {
+      console.log('error', res);
+      alert('error updating note');
+      return;
+    }
+    func(res as Note);
+  });
+};
+
+export const getNote = (id: string, func: (res: Note) => void) => {
+  console.log('getNote');
+  console.log('id', id);
+  window.electron.notes.getNote(id, (res) => {
+    if (res instanceof Error) {
+      console.log('error', res);
+      alert('error getting note');
+      return;
+    }
+    console.log('getNote res: ', res);
+    func(res as Note);
+  });
+};

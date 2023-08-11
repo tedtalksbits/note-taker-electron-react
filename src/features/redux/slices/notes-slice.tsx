@@ -4,6 +4,7 @@ import { Note } from 'electron/types/note';
 
 // define the state type
 export interface NotesState {
+  lastAddedNote: any;
   notes: Note[];
   selectedNote: Note | null;
 }
@@ -12,6 +13,7 @@ export interface NotesState {
 const initialState: NotesState = {
   notes: [],
   selectedNote: null,
+  lastAddedNote: null,
 };
 
 // define the reducers
@@ -29,11 +31,14 @@ export const notesSlice = createSlice({
         updatedAt: note.updatedAt.toString(),
       }));
     },
+    setSelectedNote: (state, action: PayloadAction<Note>) => {
+      state.selectedNote = action.payload;
+    },
   },
 });
 
 // define and export the actions
-export const { setNotes } = notesSlice.actions;
+export const { setNotes, setSelectedNote } = notesSlice.actions;
 
 // define and export the selector
 export const selectNotes = (state: RootState) => state.notes.notes;

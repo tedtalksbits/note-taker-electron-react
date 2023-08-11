@@ -49,7 +49,7 @@ const electronHandler = {
     },
     updateNote(
       id: string,
-      update: Partial<Note>,
+      update: NoteDTO,
       func: (...args: unknown[]) => void
     ) {
       ipcRenderer.send('update-note', id, update);
@@ -62,6 +62,10 @@ const electronHandler = {
       ipcRenderer.once('delete-note-response', (_event, id: string) =>
         func(id)
       );
+    },
+    getNote(id: string, func: (res: Note | Error) => void) {
+      ipcRenderer.send('get-note', id);
+      ipcRenderer.once('get-note-response', (_event, note: Note) => func(note));
     },
   },
 };
