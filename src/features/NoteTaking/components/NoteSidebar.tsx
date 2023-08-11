@@ -31,10 +31,7 @@ export const NoteSidebar = ({
         <p className='text-xl  font-bold'>Notes</p>
         <Button
           className='bg-foreground/10 w-fit h-fit p-2'
-          onClick={() => {
-            onAddNote();
-            onNoteSelect(notes[notes.length - 1]);
-          }}
+          onClick={onAddNote}
         >
           <Pencil2Icon />
         </Button>

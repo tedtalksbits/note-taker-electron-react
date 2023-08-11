@@ -1,10 +1,5 @@
-import { useState } from 'react';
-
 export const useCurrentDirectory = () => {
-  const noteDirectory = localStorage.getItem('noteDirectory');
-  const [currentDirectory, setCurrentDirectory] = useState<string | null>(
-    noteDirectory
-  );
+  const currentDirectory = localStorage.getItem('noteDirectory');
 
   const handleChooseDirectory = async () => {
     try {
@@ -12,7 +7,7 @@ export const useCurrentDirectory = () => {
         'chooseNoteDirectory'
       );
       if (!directory) return;
-      setCurrentDirectory(directory);
+
       // store in local storage
       localStorage.setItem('noteDirectory', directory);
     } catch (err) {

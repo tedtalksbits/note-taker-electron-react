@@ -8,13 +8,15 @@ import {
 } from '@/features/NoteTaking/api';
 import { NoteDTO, Note as NoteType } from 'electron/types/note';
 import { useEffect, useState } from 'react';
+import { useCurrentDirectory } from '@/features/Settings/hooks/useCurrentDirectory';
 
 const NoteApp = () => {
   const [notes, setNotes] = useState<NoteType[]>([]);
   const [selectedNote, setSelectedNote] = useState<NoteType>(notes[0]);
-  const [selectedDirectory, setSelectedDirectory] = useState<string>(
-    localStorage.getItem('noteDirectory') || ''
-  );
+  // const [selectedDirectory, setSelectedDirectory] = useState<string>(
+  //   localStorage.getItem('noteDirectory') || ''
+  // );
+  const { currentDirectory } = useCurrentDirectory();
   useEffect(() => {
     console.log('getting notes');
     getNotes((notes) => {
@@ -45,27 +47,14 @@ const NoteApp = () => {
     });
   }
 
-  const handleChooseDirectory = async () => {
-    try {
-      const directory = await window.electron.ipcRenderer.invoke(
-        'chooseNoteDirectory'
-      );
-      if (!directory) return;
-      setSelectedDirectory(directory);
-      // store in local storage
-      localStorage.setItem('noteDirectory', directory);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   function handleAddNote() {
     const newNote: NoteDTO = {
       title: 'New Note',
       content: '',
     };
-    addNote(newNote, selectedDirectory, (note) => {
+    addNote(newNote, currentDirectory as string, (note) => {
       console.log('added note: ' + note.id);
+      if (!note || !currentDirectory) return;
       getNotes((notes) => {
         setNotes(notes);
       });

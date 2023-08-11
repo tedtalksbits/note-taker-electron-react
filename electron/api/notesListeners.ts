@@ -18,7 +18,12 @@ export const setUpNotesListeners = () => {
         })
       );
 
-      event.reply('get-notes-response', notes);
+      // event.reply('get-notes-response', notes);
+      const sortedNotes = notes.sort(
+        (a, b) =>
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+      );
+      event.reply('get-notes-response', sortedNotes);
     } catch (error) {
       console.log(error);
       event.reply('get-notes-response', error);
