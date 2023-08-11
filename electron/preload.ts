@@ -67,6 +67,10 @@ const electronHandler = {
       ipcRenderer.send('get-note', id);
       ipcRenderer.once('get-note-response', (_event, note: Note) => func(note));
     },
+    searchNotes(keyword: string, func: (notes: Note[] | Error) => void) {
+      ipcRenderer.send('search-notes', keyword);
+      ipcRenderer.once('search-notes-response', (_event, notes) => func(notes));
+    },
   },
 };
 

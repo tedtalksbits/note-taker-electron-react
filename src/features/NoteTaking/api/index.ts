@@ -69,3 +69,15 @@ export const getNote = (id: string, func: (res: Note) => void) => {
     func(res as Note);
   });
 };
+
+export const searchNotes = (keyword: string, func: (notes: Note[]) => void) => {
+  console.log('searchNotes');
+  window.electron.notes.searchNotes(keyword, (res) => {
+    if (res instanceof Error) {
+      console.log('error', res);
+      alert('error searching notes');
+      return;
+    }
+    func(res as Note[]);
+  });
+};

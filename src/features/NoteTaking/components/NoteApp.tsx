@@ -4,6 +4,7 @@ import {
   addNote,
   deleteNote,
   getNotes,
+  searchNotes,
   updateNote,
 } from '@/features/NoteTaking/api';
 import { NoteDTO, Note as NoteType } from 'electron/types/note';
@@ -61,6 +62,12 @@ const NoteApp = () => {
     });
   }
 
+  function handleSearch(term: string) {
+    searchNotes(term, (notes) => {
+      setNotes(notes);
+    });
+  }
+
   return (
     <div className='grid layout'>
       <div className='sidebar h-screen bg-accent max-w-[350px]'>
@@ -70,6 +77,7 @@ const NoteApp = () => {
           onDeleteNote={handleNoteDelete}
           selectedNote={selectedNote}
           onAddNote={handleAddNote}
+          onSearch={handleSearch}
         />
       </div>
       <div className='main h-screen overflow-y-scroll'>

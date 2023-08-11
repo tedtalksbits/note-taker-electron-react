@@ -109,4 +109,29 @@ export const setUpNotesListeners = () => {
       event.reply('get-note-response', error);
     }
   });
+
+  ipcMain.on('search-notes', async (event, query) => {
+    try {
+      const notesPaths = store.get('notesPaths', []) as string[];
+      const notes = await Promise.all(
+        notesPaths.map(async (notePath) => {
+          const noteContent = await fs.readFile(notePath, 'utf-8');
+          return JSON.parse(noteContent) as Note;
+        })
+      );
+      const filteredNotes = notes.filter((note) => {
+        const titleMatch = note.title
+          .toLowerCase()
+          .includes(query.toLowerCase());
+        const contentMatch = note.content
+          .toLowerCase()
+          .includes(query.toLowerCase());
+        return titleMatch || contentMatch;
+      });
+      event.reply('search-notes-response', filteredNotes);
+    } catch (error) {
+      console.log(error);
+      event.reply('search-notes-response', error);
+    }
+  });
 };

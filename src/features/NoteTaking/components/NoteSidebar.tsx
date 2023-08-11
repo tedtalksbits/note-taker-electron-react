@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 // import dayjs plugin for relative time
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Settings } from '../../Settings/Settings';
+import { useState } from 'react';
 dayjs.extend(relativeTime);
 type NoteSidebarProps = {
   notes: Note[];
@@ -12,6 +13,7 @@ type NoteSidebarProps = {
   onNoteSelect: (note: Note) => void;
   onDeleteNote: (id: string) => void;
   onAddNote: () => void;
+  onSearch: (query: string) => void;
 };
 export const NoteSidebar = ({
   notes,
@@ -19,7 +21,25 @@ export const NoteSidebar = ({
   onNoteSelect,
   selectedNote,
   onAddNote,
+  onSearch,
 }: NoteSidebarProps) => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  function debounce(func: any, timeout = 300) {
+    let timer: NodeJS.Timeout;
+    return (...args: any) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        func.apply(this, args);
+      }, timeout);
+    };
+  }
+
+  const onSearchDebounced = debounce((query: string) => {
+    setSearchTerm(query);
+    onSearch(query);
+  }, 300);
+
   if (!notes) {
     return (
       <div className='text-center text-foreground/40'>No note selected</div>
@@ -27,6 +47,13 @@ export const NoteSidebar = ({
   }
   return (
     <div className='flex flex-col h-full px-2 py-4'>
+      <div className='flex flex-col gap-2 mb-4'>
+        <input
+          className='bg-foreground/10 text-foreground/70 p-2 rounded-lg outline-none border-none'
+          placeholder='Search notes'
+          onChange={(e) => onSearchDebounced(e.currentTarget.value)}
+        />
+      </div>
       <header className='flex item-center justify-between p-4 border-b mb-4'>
         <p className='text-xl  font-bold'>Notes</p>
         <Button
