@@ -17,7 +17,8 @@ const NoteApp = () => {
   // const [selectedDirectory, setSelectedDirectory] = useState<string>(
   //   localStorage.getItem('noteDirectory') || ''
   // );
-  const { currentDirectory } = useCurrentDirectory();
+  const { currentDirectory, handleChooseDirectory, getCurrentDirectory } =
+    useCurrentDirectory();
   useEffect(() => {
     console.log('getting notes');
     getNotes((notes) => {
@@ -49,13 +50,17 @@ const NoteApp = () => {
   }
 
   function handleAddNote() {
+    console.log('adding note');
+    const dir = getCurrentDirectory();
+    if (!dir) return handleChooseDirectory();
+
     const newNote: NoteDTO = {
       title: 'New Note',
       content: '',
     };
-    addNote(newNote, currentDirectory as string, (note) => {
+    addNote(newNote, dir as string, (note) => {
       console.log('added note: ' + note.id);
-      if (!note || !currentDirectory) return;
+      if (!note) return;
       getNotes((notes) => {
         setNotes(notes);
       });

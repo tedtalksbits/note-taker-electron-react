@@ -1,5 +1,5 @@
 export const useCurrentDirectory = () => {
-  const currentDirectory = localStorage.getItem('noteDirectory');
+  let currentDirectory = localStorage.getItem('noteDirectory');
 
   const handleChooseDirectory = async () => {
     try {
@@ -15,5 +15,10 @@ export const useCurrentDirectory = () => {
     }
   };
 
-  return { currentDirectory, handleChooseDirectory };
+  const getCurrentDirectory = () => {
+    currentDirectory = localStorage.getItem('noteDirectory');
+    return localStorage.getItem('noteDirectory');
+  };
+
+  return { currentDirectory, handleChooseDirectory, getCurrentDirectory };
 };
