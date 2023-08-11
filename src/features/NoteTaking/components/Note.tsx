@@ -1,6 +1,5 @@
-import { updateNote } from '@/features/NoteTaking/api';
 import { NoteDTO, Note as NoteType } from 'electron/types/note';
-import React, { useState } from 'react';
+import { useState } from 'react';
 type NoteProps = {
   note: NoteType;
   onNoteUpdate: (id: string, note: NoteDTO) => void;
@@ -39,7 +38,6 @@ export const Note = ({ note, onNoteUpdate, className }: NoteProps) => {
           contentEditable
           dangerouslySetInnerHTML={{ __html: note?.content }}
           onInput={(e) => {
-            // console.log(e.currentTarget.innerHTML);
             setNoteUpdated({
               ...noteUpdated,
               content: e.currentTarget.innerHTML,

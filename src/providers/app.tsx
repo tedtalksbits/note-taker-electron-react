@@ -1,8 +1,6 @@
 import React from 'react';
 import { ThemeProvider } from './theme-provider';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Provider } from 'react-redux';
-import { store } from '@/store';
 
 type FallbackProps = {
   error: Error;
@@ -33,7 +31,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <React.Suspense fallback={<LoadingScreen />}>
         <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
-          <Provider store={store}>{children}</Provider>
+          {children}
         </ThemeProvider>
       </React.Suspense>
     </ErrorBoundary>

@@ -45,6 +45,20 @@ const NoteApp = () => {
     });
   }
 
+  const handleChooseDirectory = async () => {
+    try {
+      const directory = await window.electron.ipcRenderer.invoke(
+        'chooseNoteDirectory'
+      );
+      if (!directory) return;
+      setSelectedDirectory(directory);
+      // store in local storage
+      localStorage.setItem('noteDirectory', directory);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   function handleAddNote() {
     const newNote: NoteDTO = {
       title: 'New Note',
