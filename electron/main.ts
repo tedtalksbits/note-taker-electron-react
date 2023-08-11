@@ -72,7 +72,7 @@ function createWindow() {
     display?.workAreaSize || screen.getPrimaryDisplay().workAreaSize;
 
   win = new BrowserWindow({
-    icon: path.join(process.env.PUBLIC, 'electron-vite.svg'),
+    icon: path.join(process.env.PUBLIC, 'favicon.ico'),
     width,
     height,
     webPreferences: {

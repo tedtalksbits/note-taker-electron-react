@@ -54,5 +54,10 @@
   },
   "main": "dist-electron/main.js",
   "author": "Tedane Blake",
-  "description": "A better note app"
+  "description": "A better note app",
+  "build": {
+    "win": {
+      "icon": "public/goodnotes.ico"
+    }
+  }
 }
