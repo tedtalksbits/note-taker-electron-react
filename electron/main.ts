@@ -53,16 +53,13 @@ function createWindow() {
   const isProduction = app.isPackaged;
   const displays = screen.getAllDisplays();
 
-  // console.log('displays', displays);
-
   // load app to on macbook pro retina display when in development
   let display;
   if (!isProduction) {
-    const devDisplayLabel = isMac ? 'Built-in Retina Display' : 'Display 1';
+    const devDisplayLabel = isMac ? 'Built-in Retina Display' : 'DELL U2518D';
     display = displays.find((display) => {
       return display.label.includes(devDisplayLabel);
     });
-    // devtools
   } else {
     display = displays.find((display) => {
       return display.bounds.x === 0 && display.bounds.y === 0;
@@ -83,7 +80,7 @@ function createWindow() {
     },
   });
 
-  win.webContents.openDevTools();
+  !isProduction && win.webContents.openDevTools();
 
   //move window to display
   win.setPosition(display?.bounds.x || 0, display?.bounds.y || 0);
