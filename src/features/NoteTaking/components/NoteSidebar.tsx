@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { GearIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons';
+import { Pencil2Icon, TrashIcon } from '@radix-ui/react-icons';
 import { Note } from 'electron/types/note';
 import dayjs from 'dayjs';
 // import dayjs plugin for relative time
@@ -23,11 +23,25 @@ export const NoteSidebar = ({
   onAddNote,
   onSearch,
 }: NoteSidebarProps) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [, setSearchTerm] = useState('');
 
-  function debounce(func: any, timeout = 300) {
+  // typed debounce function for this use case (searching notes)
+  // function debounce<T extends (query:string)=> void>(func: T, timeout = 300) {
+  //   let timer: NodeJS.Timeout;
+  //   return function (this: ThisParameterType<T>, query: string) {
+  //     clearTimeout(timer);
+  //     timer = setTimeout(() => {
+  //       func.apply(this, [query]);
+  //     }, timeout);
+  //   };
+  // }
+  // typed debounce function for any use case
+  function debounce<T extends (...args: never[]) => void>(
+    func: T,
+    timeout = 300
+  ) {
     let timer: NodeJS.Timeout;
-    return (...args: any) => {
+    return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
       clearTimeout(timer);
       timer = setTimeout(() => {
         func.apply(this, args);

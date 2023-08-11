@@ -32,7 +32,7 @@ ipcMain.on('get-test', async (event, arg) => {
 
 setUpIpcListeners();
 
-ipcMain.handle('chooseNoteDirectory', async (event, arg) => {
+ipcMain.handle('chooseNoteDirectory', async (arg) => {
   console.log(arg);
   console.log('chooseNoteDirectory');
   const result = await dialog.showOpenDialog({

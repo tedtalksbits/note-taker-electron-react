@@ -1,4 +1,4 @@
-import { app, ipcMain } from 'electron';
+import { ipcMain } from 'electron';
 import { Note } from 'electron/types/note';
 import Store from 'electron-store';
 import crypto from 'crypto';

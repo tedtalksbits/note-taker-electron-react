@@ -1,7 +1,7 @@
 {
-  "name": "electron-vite-base",
+  "name": "betternote",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
@@ -52,5 +52,7 @@
     "vite-plugin-electron": "^0.11.2",
     "vite-plugin-electron-renderer": "^0.14.5"
   },
-  "main": "dist-electron/main.js"
+  "main": "dist-electron/main.js",
+  "author": "Tedane Blake",
+  "description": "A better note app"
 }

@@ -62,8 +62,8 @@ export function ThemeProvider({
     </ThemeProviderContext.Provider>
   );
 }
-// ignore this
-// eslint-disable-next-line @typescript-eslint/no-redeclare, react-refresh/only-export-components
+
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTheme = () => {
   const context = useContext(ThemeProviderContext);
 
