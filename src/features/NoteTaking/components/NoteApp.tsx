@@ -75,17 +75,15 @@ const NoteApp = () => {
   return (
     <div className='grid layout'>
       <div className='sidebar h-screen bg-accent max-w-[350px]'>
-        <div className='h-full border-r p-2'>
-          <NoteSidebar
-            notes={notes}
-            onNoteSelect={handleNoteSelect}
-            onDeleteNote={handleNoteDelete}
-            selectedNote={selectedNote}
-            onAddNote={handleAddNote}
-          />
-        </div>
+        <NoteSidebar
+          notes={notes}
+          onNoteSelect={handleNoteSelect}
+          onDeleteNote={handleNoteDelete}
+          selectedNote={selectedNote}
+          onAddNote={handleAddNote}
+        />
       </div>
-      <div className='main h-screen'>
+      <div className='main h-screen overflow-y-scroll'>
         <Note
           note={selectedNote}
           onNoteUpdate={handleNoteUpdate}

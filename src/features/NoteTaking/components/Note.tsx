@@ -1,5 +1,9 @@
 import { NoteDTO, Note as NoteType } from 'electron/types/note';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 type NoteProps = {
   note: NoteType;
   onNoteUpdate: (id: string, note: NoteDTO) => void;
@@ -7,6 +11,7 @@ type NoteProps = {
 };
 export const Note = ({ note, onNoteUpdate, className }: NoteProps) => {
   const [didUpdate, setDidUpdate] = useState(false);
+  const [showMarkdown, setShowMarkdown] = useState(false);
   const [noteUpdated, setNoteUpdated] = useState<NoteDTO>({
     title: note?.title,
     content: note?.content,
@@ -54,6 +59,33 @@ export const Note = ({ note, onNoteUpdate, className }: NoteProps) => {
           }}
           className={`border-none outline-none ${className}`}
         ></div>
+
+        {!showMarkdown && (
+          <div className='absolute top-0 right-0'>
+            <Button onClick={() => setShowMarkdown(true)} className=''>
+              Show Markdown
+            </Button>
+          </div>
+        )}
+
+        {showMarkdown && (
+          <>
+            <div className='border-b mb-4'></div>
+            <div className='flex flex-col'>
+              <Button
+                onClick={() => setShowMarkdown(false)}
+                className='ml-auto'
+              >
+                Hide Markdown
+              </Button>
+            </div>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              children={noteUpdated?.content}
+              rehypePlugins={[rehypeRaw]}
+            />
+          </>
+        )}
 
         {didUpdate && (
           <div className='text-foreground/50 text-right absolute top-0 right-0'>
