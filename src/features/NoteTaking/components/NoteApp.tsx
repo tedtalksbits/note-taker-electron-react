@@ -67,6 +67,7 @@ const NoteApp = () => {
   }
 
   function handleSearch(term: string) {
+    if (notes.length === 0) return console.log('no notes');
     searchNotes(term, (notes) => {
       setNotes(notes);
     });
